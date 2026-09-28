@@ -5,6 +5,7 @@ import Navbar from "../Components/Navbar";
 import NoteCard from "../Components/NoteCard";
 import RateLimtedUI from "../Components/RateLimtedUI";
 import { useEffect, useState } from "react";
+import Notesnotfound from "../Components/Notesnotfound";
 
 function Homepage() {
   // Initialize the state for the homepage
@@ -57,10 +58,13 @@ function Homepage() {
           </div>
         )}
 
+{Notes.length === 0 && !isRatedLimted && <Notesnotfound />}
+
+
         {Notes.length > 0 && !isRatedLimted && (
           <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4 gap-6">
             {Notes.map((note) => (
-              <NoteCard key={note._id} note={note} />
+              <NoteCard key={note._id} note={note} setNotes={setNotes} />
             ))}
           </div>
         )}
