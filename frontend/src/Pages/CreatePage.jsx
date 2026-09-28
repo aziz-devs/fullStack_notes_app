@@ -3,18 +3,46 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { ArrowLeftIcon } from "lucide-react";
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { useNavigate } from "react-router";
+
+
+
 
 function CreatePage() {
   const [title, settitle] = useState("");
   const [content, setcontent] = useState("");
-  const [loadaing, isLoading] = useState(false);
+  const [loadaing, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  function handlesubmit(e) {
-
+  async function handlesubmit(e) {
     e.preventDefault();
-    console.log(title);
-    console.log(content);
-   }
+
+    if (!title.trim() || !content.trim()) {
+      toast.error("All fields are required");
+      return;
+    }
+    setLoading(true);
+
+    try {
+      await axios.post("http://localhost:5000/api/notes", { title, content });
+      toast.success("note created successfully");
+      navigate("/");
+    } catch (error) {
+      console.log("error creating note", error);
+      if (error.response?.status === 429) {
+        toast.error(
+          "slow down?, you're creating too many notes in a short time, please wait a moment and try again.",
+          { duration: 5000, icon: "💀" },
+        );
+      } else {
+        toast.error("failed to create note");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-base-100">
@@ -54,9 +82,13 @@ function CreatePage() {
                     onChange={(e) => setcontent(e.target.value)}
                   ></textarea>
                 </div>
-                
+
                 <div className="card-actions justify-end">
-                  <button type="submit" className="btn btn-primary" disabled={loadaing}>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loadaing}
+                  >
                     {loadaing ? "Creating..." : "Create Note"}
                   </button>
                 </div>
