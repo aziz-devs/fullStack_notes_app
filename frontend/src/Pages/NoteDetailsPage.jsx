@@ -31,7 +31,7 @@ function NoteDetailsPage() {
     fetchNote();
   }, [id]);
 
-  function handleDelete() {
+  async function handleDelete() {
 
     if (!window.confirm("Are you sure you want to delete this note?")) {
       return;
@@ -40,17 +40,36 @@ function NoteDetailsPage() {
     setSaving(true);
 
     try {
-      axios.delete(`http://localhost:5000/api/notes/${id}`);
+      await axios.delete(`http://localhost:5000/api/notes/${id}`);
       toast.success("note deleted successfully");
       navigate("/");
     } catch (error) {
       console.log("error in handleDelete", error);
       toast.error("failed to delete note");
+    } 
+  }
+  async  function handleSave() {
+
+    if (!note.title.trim() || !note.content.trim()) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+     await axios.put(`http://localhost:5000/api/notes/${id}`, note);
+      toast.success("note updated successfully");
+    } catch (error) {
+      console.log("error in handleSave", error);
+      toast.error("failed to update note");
+      navigate("/");
     } finally {
       setSaving(false);
     }
+
+
   }
-  function handleSave() {}
 
   console.log({ note });
 
@@ -74,7 +93,7 @@ function NoteDetailsPage() {
               </Link>
               <button
                 className="btn btn-outline btn-error"
-                onclick={handleDelete}
+                onClick={handleDelete}
               >
                 <Trash2Icon className="h-5 w-5" />
                 Delete Note
@@ -113,7 +132,7 @@ function NoteDetailsPage() {
                 </div>
                 <div className="card-actions justify-end">
                   <button
-                    onclick={handleSave}
+                    onClick={handleSave}
                     className="btn btn-primary"
                     disabled={saving}
                   >
