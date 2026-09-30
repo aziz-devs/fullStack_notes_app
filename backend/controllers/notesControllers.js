@@ -3,30 +3,28 @@ const { Note } = require("../modules/Note");
 // get all notes Controller frome the database and send it to the client side
 async function getAllNotes(req, res) {
   try {
-    const notes = await Note.find().sort({createdAt:-1}); // newest first 
+    const notes = await Note.find().sort({ createdAt: -1 }); // newest first
     res.status(200).json(notes);
-  
   } catch (error) {
     console.log("error in get all notes controller ", error);
     res.status(500).json({ message: "intenal server error " });
   }
 }
 
-// get note by id 
+// get note by id
 
-async function getNotebyId(req,res) {
-
+async function getNotebyId(req, res) {
   try {
-    const {title,content}=req.body
-     const getNote=await Note.findById( req.params.id ,{title,content});
-     
-     res.status(200).json(getNote);
+    // error in this line of code fix it
+
+    const getNote = await Note.findById(req.params.id);
+    if (!getNote) return res.status(404).json({ message: "note not found" });
+
+    res.status(200).json(getNote);
   } catch (error) {
-    console.log("error in get note by id controller " , error);
-    res.status(500).json({message:"external server error"})
-    
+    console.log("error in get note by id controller ", error);
+    res.status(500).json({ message: "external server error" });
   }
-  
 }
 
 // creating a new note in the database and send it to the client side
@@ -79,17 +77,15 @@ async function deleteNotes(req, res) {
       return res.status(404).json({ message: "note not found to delete" });
     res.status(200).json({ message: "your notes deleted successfully" });
   } catch (error) {
-    console.log("error on delete controller",error);
+    console.log("error on delete controller", error);
     res.status(500).json({ message: "internal server  error" });
   }
 }
-
-
 
 module.exports = {
   getAllNotes,
   createNotes,
   updateNotes,
   deleteNotes,
-  getNotebyId
+  getNotebyId,
 };
