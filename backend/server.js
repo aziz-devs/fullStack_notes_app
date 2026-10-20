@@ -13,22 +13,18 @@ const dotenv = require("dotenv");
 // call the config method of the dotenv module to load the environment variables from the .env file into process.env
 dotenv.config();
 // calling the port variable from the .env file and storing it in a constant variable
-const Port=process.env.Port
-
-
+const Port = process.env.Port || 5001;
 
 const app = express();
 // const __dirname = path.resolve();
 
-
-
 // ? this is the middleware for parsing the json data ,
-if(process.env.NODE_ENV !== "production"){ 
-app.use(cors({
-
-    origin: "http://localhost:5173", // Replace with your frontend URL
-}));
-
+if (process.env.NODE_ENV !== "production") {
+  app.use(
+    cors({
+      origin: "http://localhost:5173", // Replace with your frontend URL
+    }),
+  );
 }
 app.use(express.json());
 
@@ -36,15 +32,16 @@ app.use(rateLimit);
 
 app.use("/api/notes", notesRouter);
 
-if(process.env.NODE_ENV === "production"){
-    app.use(express.static(path.join(__dirname,"../frontend/dist")));
-    app.get("*",(req,res)=>{
-        res.sendFile(path.resolve(__dirname,"../frontend/dist/index.html"))
-    } )}
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
+  });
+}
 
 connecteDB().then(() => {
- 
-    // ! this is the server port , listening to the port 5000
-    app.listen(Port, () => console.log("server is listing in port ",Port))
-})
-
+  // ! this is the server port , listening to the port 5000
+  app.listen(Port, "0.0.0.0", () =>
+    console.log("server is listing in port ", Port),
+  );
+});
