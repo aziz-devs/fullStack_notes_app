@@ -13,7 +13,9 @@ const dotenv = require("dotenv");
 // call the config method of the dotenv module to load the environment variables from the .env file into process.env
 dotenv.config();
 // calling the port variable from the .env file and storing it in a constant variable
-const Port = process.env.Port || 5001;
+const Port = process.env.PORT || 5001;
+
+
 
 const app = express();
 // const __dirname = path.resolve();
