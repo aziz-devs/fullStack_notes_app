@@ -1,11 +1,11 @@
 // creating a simple homepage for test
 import api from "../lib/axios";
 import toast from "react-hot-toast";
-import Navbar from "../Components/Navbar";
-import NoteCard from "../Components/NoteCard";
-import RateLimtedUI from "../Components/RateLimtedUI";
+import Navbar from "../components/Navbar";
+import NoteCard from "../components/NoteCard";
+import RateLimtedUI from "../components/RateLimtedUI";
 import { useEffect, useState } from "react";
-import Notesnotfound from "../Components/Notesnotfound";
+import Notesnotfound from "../components/Notesnotfound";
 
 function Homepage() {
   // Initialize the state for the homepage
