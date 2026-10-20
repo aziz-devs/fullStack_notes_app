@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, Trash2Icon } from "lucide-react";
 import { Link } from "react-router";
-import axios from "axios";
+import api from "../lib/axios";
 import { LoaderIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -19,7 +19,7 @@ function NoteDetailsPage() {
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/notes/${id}`);
+        const res = await api.get(`/notes/${id}`);
         setNote(res.data);
       } catch (error) {
         console.log("error fatching notes", error);
@@ -40,7 +40,7 @@ function NoteDetailsPage() {
     setSaving(true);
 
     try {
-      await axios.delete(`http://localhost:5000/api/notes/${id}`);
+      await api.delete(`/notes/${id}`);
       toast.success("note deleted successfully");
       navigate("/");
     } catch (error) {
@@ -58,7 +58,7 @@ function NoteDetailsPage() {
     setSaving(true);
 
     try {
-     await axios.put(`http://localhost:5000/api/notes/${id}`, note);
+     await api.put(`/notes/${id}`, note);
       toast.success("note updated successfully");
     } catch (error) {
       console.log("error in handleSave", error);

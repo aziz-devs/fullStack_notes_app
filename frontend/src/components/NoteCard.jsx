@@ -1,6 +1,6 @@
 import { PenSquareIcon, Trash2Icon } from "lucide-react";
 import { Link } from "react-router";
-import axios from "axios";
+import api from "../lib/axios";
 import toast from "react-hot-toast";
 import { dateFormatter } from "../lib/utils";
 
@@ -15,7 +15,7 @@ function NoteCard({ note, setNotes }) {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/notes/${id}`);
+      await api.delete(`/notes/${id}`);
       setNotes((prv) => prv.filter((note) => note._id !== id)); // git rid of the deleted note from the state
       toast.success("note deleted successfully");
     } catch (error) {

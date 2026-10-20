@@ -4,6 +4,7 @@ const notesRouter = require("./routes/routes");
 const mongoose = require("mongoose");
 const rateLimit = require("./middleware/ratelimit");
 const cors = require("cors");
+const path = require("path");
 // concat the path of the database connection file and the config folder
 const { connecteDB } = require("./config/db");
 // dotenv is a zero-dependency module that loads environment variables from a .env file into process.env
@@ -17,19 +18,29 @@ const Port=process.env.Port
 
 
 const app = express();
+// const __dirname = path.resolve();
 
 
 
 // ? this is the middleware for parsing the json data ,
+if(process.env.NODE_ENV !== "production"){ 
 app.use(cors({
 
     origin: "http://localhost:5173", // Replace with your frontend URL
 }));
+
+}
 app.use(express.json());
 
 app.use(rateLimit);
 
 app.use("/api/notes", notesRouter);
+
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname,"../frontend/dist")));
+    app.get("*",(req,res)=>{
+        res.sendFile(path.resolve(__dirname,"../frontend/dist/index.html"))
+    } )}
 
 connecteDB().then(() => {
  
